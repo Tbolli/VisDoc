@@ -1,0 +1,100 @@
+﻿@using System.IO;
+@model IEnumerable<VisDoc.Models.DocumentModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>Visma Doc</h1>
+<p>Velkommen</p>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a style="cursor: pointer;" onclick="uploadPop" id="UploadBtn"class="nav-link">Upload</a>
+        </li>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item">Action</a></li>
+            <li><a class="dropdown-item">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item">Something else here</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form method ="get" asp-controller="Home" asp-action="Index" class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<!-- Table -->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Path</th>
+      <th scope="col">UploadedTime</th>
+    </tr>
+  </thead>
+  <tbody>
+        @foreach (var elements in Model)
+        {
+            <tr>
+             <th scope="row">@elements.Id</th>
+             <td>@elements.Name</td>
+             <td>@elements.Path</td>
+             <td>@elements.UploadedDateTime</td>
+            </tr>
+        }
+     
+  </tbody>
+</table>
+
+<div style="display:none;"id="UploadPop">
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
+<div class="wrapper">
+  <div class="cntr">
+    <h1>Upload a file</h1>
+    <div class="upload_container">
+      <div class="border-container">
+        <div class="icons fa-4x">
+          <i class="fas fa-file-image" data-fa-transform="shrink-3 down-2 left-6 rotate--45"></i>
+          <i class="fas fa-file-alt" data-fa-transform="shrink-2 up-4"></i>
+          <i class="fas fa-file-pdf" data-fa-transform="shrink-3 down-2 right-6 rotate-45"></i>
+        </div>
+        <!--<input type="file" id="file-upload">-->
+        <p>Drag and drop files here, or </p> 
+          <input style="border: none;" type="file" name="files" multiple id="file-browser"/>
+      </div>
+      <hr style="margin-top:13px;" />
+           <button type="submit" value="Upload">Submit Files </button>
+    </div>
+  </div>
+</div>
+</form>
+</div>
+
+<script>
+    let check = true
+    const asd = document.getElementById("UploadPop")
+
+    document.getElementById("UploadBtn").onclick = () =>{
+        if (check){check = false; asd.style.display = "inline";}
+        else{check = true; asd.style.display = "none";}
+    }
+
+</script>
+
+
