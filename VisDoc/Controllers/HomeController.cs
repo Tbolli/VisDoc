@@ -51,14 +51,16 @@ namespace VisDoc.Controllers
                     {
                         Name = uniqueFileName,
                         Path = pathString,
-                        UploadedDateTime = DateTime.Now
+                        UploadedDateTime = DateTime.Now,
+                        Extension = ".file"
+
                     };
                     _context.Document.Add(newInsert);
                     _context.SaveChanges();
                 }
             }
             List<DocumentModel> model = _context.Document.ToList();
-            //return Ok(model);
+            //return Ok(files[0].Name);
             return View("Index", model);
         }
 
