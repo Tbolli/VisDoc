@@ -7,6 +7,30 @@
 <h1>Visma Doc</h1>
 <p>Velkommen</p>
 
+<div style="display:none; position:absolute; top:10%; left: 40%;z-index: 2;"id="UploadPop">
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
+<div class="wrapper">
+  <div class="cntr">
+    <h1>Upload a file</h1>
+    <div class="upload_container">
+      <div class="border-container">
+        <div class="icons fa-4x">
+          <i class="fas fa-file-image" data-fa-transform="shrink-3 down-2 left-6 rotate--45"></i>
+          <i class="fas fa-file-alt" data-fa-transform="shrink-2 up-4"></i>
+          <i class="fas fa-file-pdf" data-fa-transform="shrink-3 down-2 right-6 rotate-45"></i>
+        </div>
+        <!--<input type="file" id="file-upload">-->
+        <p>Drag and drop files here, or </p> 
+          <input style="border: none;" type="file" name="files" multiple id="file-browser"/>
+      </div>
+      <hr style="margin-top:13px;" />
+           <button type="submit" value="Upload">Submit Files </button>
+    </div>
+  </div>
+</div>
+</form>
+</div>
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
@@ -31,7 +55,7 @@
         </li>
       </ul>
       <form method ="get" asp-controller="Home" asp-action="Index" class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <input name="Search"class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
@@ -53,38 +77,16 @@
         {
             <tr>
              <th scope="row">@elements.Id</th>
-             <td>@elements.Name</td>
+             <td>@Html.ActionLink(elements.Name, "Download","Home", new { filename = elements.Name })</td>
              <td>@elements.Path</td>
-             <td>@elements.UploadedDateTime</td>
+             <td>@elements.UploadedDateTime.ToShortDateString()</td>
             </tr>
         }
      
   </tbody>
 </table>
 
-<div style="display:none;"id="UploadPop">
-<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
-<div class="wrapper">
-  <div class="cntr">
-    <h1>Upload a file</h1>
-    <div class="upload_container">
-      <div class="border-container">
-        <div class="icons fa-4x">
-          <i class="fas fa-file-image" data-fa-transform="shrink-3 down-2 left-6 rotate--45"></i>
-          <i class="fas fa-file-alt" data-fa-transform="shrink-2 up-4"></i>
-          <i class="fas fa-file-pdf" data-fa-transform="shrink-3 down-2 right-6 rotate-45"></i>
-        </div>
-        <!--<input type="file" id="file-upload">-->
-        <p>Drag and drop files here, or </p> 
-          <input style="border: none;" type="file" name="files" multiple id="file-browser"/>
-      </div>
-      <hr style="margin-top:13px;" />
-           <button type="submit" value="Upload">Submit Files </button>
-    </div>
-  </div>
-</div>
-</form>
-</div>
+
 
 <script>
     let check = true
@@ -94,7 +96,6 @@
         if (check){check = false; asd.style.display = "inline";}
         else{check = true; asd.style.display = "none";}
     }
-
 </script>
 
 
