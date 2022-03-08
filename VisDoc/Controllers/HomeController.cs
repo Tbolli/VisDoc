@@ -3,7 +3,6 @@ using System.Diagnostics;
 using VisDoc.Models;
 using System.Data.SqlClient;
 using VisDoc.Data;
-using VisDoc.ControllerHelperFunctions;
 
 namespace VisDoc.Controllers
 {
@@ -30,18 +29,15 @@ namespace VisDoc.Controllers
 
         //Upload File
         [HttpPost("FileUpload")]
-        public async Task<IActionResult> Upload(List<IFormFile> files)
+        public async Task<IActionResult> Upload(List<IFormFile> files, string givenName)
         {
+
             if (files != null)
             {
                 foreach (var file in files)
                 {
-                    var nameLikeList = _context.Document.Where(x => x.Name.Contains(file.FileName)).ToList();
-
-                    
-
-                    string uniqueFileName = Helper.newName(nameLikeList, file);
-
+                    string appeardFileName = string.IsNullOrWhiteSpace(givenName) ? file.FileName : givenName;
+                    string uniqueFileName = file.FileName;
                     string pathString = Path.Combine(basePath, uniqueFileName);
                     using (var stream = new FileStream(pathString, FileMode.Create))
                     {
@@ -60,7 +56,6 @@ namespace VisDoc.Controllers
                 }
             }
             List<DocumentModel> model = _context.Document.ToList();
-            //return Ok(files[0].Name);
             return View("Index", model);
         }
 
