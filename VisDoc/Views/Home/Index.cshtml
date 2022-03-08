@@ -5,12 +5,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
 <h1>Visma Doc</h1>
 <p>Velkommen</p>
 
-<!-- Modal -->
+<!-- Modal Upload -->
 <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -23,8 +21,7 @@
       </div>
       <div class="modal-body">
         <input type="file" name="files" multiple />
-        
-        <input style="margin-top:16px" type="text"name="givenName" />
+        <input style="margin-top:16px" type="text" placeholder="Name" name="givenName" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -44,7 +41,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a style="cursor: pointer;" onclick="uploadPop"  data-toggle="modal" data-target="#exampleModal" id="UploadBtn"class="nav-link">Upload</a>
+          <a style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" id="UploadBtn"class="nav-link">Upload</a>
         </li>
           <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,7 +64,7 @@
 </nav>
 
 <!-- Table -->
-<table class="table table-hover">
+<table style="height:auto; margin-bottom: 80px;" class="table table-hover">
   <thead>
     <tr>
       <th scope="col">ID</th>
@@ -83,7 +80,7 @@
             <tr>
              <th scope="row">@elements.Id</th>
              <td>@Html.ActionLink("🔥", "Download","Home", new { filename = elements.Name })</td>
-             <td>@elements.Name</td>
+             <td><a onclick="nameInfoclick(@elements.Id)"style="cursor: pointer; text-decoration:none;" data-toggle="modal" data-target="#ModalStats">@elements.Name</a></td>
              <td>@elements.Path</td>
              <td>@elements.UploadedDateTime.ToShortDateString()</td>
             </tr>
@@ -92,8 +89,41 @@
   </tbody>
 </table>
 
+<!-- Modal ObjStats -->
+<div class="modal fade" id="ModalStats" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="docInfoDivId" class="modal-body">
+            <div style="border-bottom: 1px solid lightgrey; "class="container">
+                <h4>Change Name</h4>
+                <div style="margin-bottom:20px;">
+                <form method="post" asp-controller="Home" asp-action="UpdateInfo" >
+                    <input id="changeNameTo" style="margin-top:10px; height:38px;border:none;border-bottom: 1.4px solid grey;" type="text" name="NameChange" placeholder="NameChange"/>
+                    <input id="elementIdSender" name="NameId" type="hidden"/>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </form>
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+<script>
+    const nameInfoclick = (elementId)=>{
+        document.getElementById("elementIdSender").value = elementId
+    }
+</script>
 

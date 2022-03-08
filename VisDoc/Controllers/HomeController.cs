@@ -36,19 +36,22 @@ namespace VisDoc.Controllers
             {
                 foreach (var file in files)
                 {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    if(fileExtension == ".zip") {  return Ok("Canot allow zipFiles"); }
+
                     string appeardFileName = string.IsNullOrWhiteSpace(givenName) ? file.FileName : givenName;
-                    string uniqueFileName = file.FileName;
-                    string pathString = Path.Combine(basePath, uniqueFileName);
+                    string uniqueFileName = Guid.NewGuid().ToString("N");
+                    string pathString = Path.Combine(basePath, uniqueFileName +fileExtension);
                     using (var stream = new FileStream(pathString, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
                     DocumentModel newInsert = new DocumentModel
                     {
-                        Name = uniqueFileName,
+                        Name = appeardFileName,
                         Path = pathString,
                         UploadedDateTime = DateTime.Now,
-                        Extension = ".file"
+                        Extension = fileExtension
 
                     };
                     _context.Document.Add(newInsert);
@@ -57,6 +60,21 @@ namespace VisDoc.Controllers
             }
             List<DocumentModel> model = _context.Document.ToList();
             return View("Index", model);
+        }
+
+        //UpdateInfo'
+        [HttpPost]
+        public IActionResult UpdateInfo(string NameChange, string NameId)
+        {
+            DocumentModel toBeChangedName = _context.Document.Where(doc => doc.Id == Int32.Parse(NameId)).FirstOrDefault();
+            if(toBeChangedName != null)
+            {
+                toBeChangedName.Name = NameChange;
+                _context.Entry(toBeChangedName).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         //Download File
