@@ -15,7 +15,7 @@ namespace VisDoc.Controllers
             _context = context;
         }
         //Get Index
-        public IActionResult Index(string Search, string SearchParentSelect)
+        public IActionResult Index(string Search)
         {
             List<DocumentModel> model;
             if (string.IsNullOrWhiteSpace(Search))
@@ -25,14 +25,6 @@ namespace VisDoc.Controllers
             }
             model = _context.Document.Where(x => x.Name.Contains(Search)).OrderBy(x => x.Id).ToList();  
             return View(model);
-        }
-
-        public IActionResult ParentSelectViewPartial()
-        {
-            List<DocumentModel> model;
-            model = _context.Document.ToList();
-            return NoContent();
-
         }
 
         //Upload File
@@ -69,19 +61,40 @@ namespace VisDoc.Controllers
             return View("Index", model);
         }
 
-        //UpdateInfo
-        [HttpPost]
-        public IActionResult UpdateInfo(string NameChange, string NameId)
+        private void setName(string NameChange, string NameId)
         {
-            if (string.IsNullOrWhiteSpace(NameChange)) { return RedirectToAction("Index", "Home"); }
+            if (string.IsNullOrWhiteSpace(NameChange)) { return; }
             DocumentModel toBeChangedName = _context.Document.Where(doc => doc.Id == Int32.Parse(NameId)).FirstOrDefault();
-            if(toBeChangedName != null)
+            if (toBeChangedName != null)
             {
                 toBeChangedName.Name = NameChange;
                 _context.Entry(toBeChangedName).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 _context.SaveChanges();
             }
+        }
 
+        //UpdateInfo
+        [HttpPost]
+        public IActionResult UpdateInfo(string NameChange, string NameId, List<string> ParentList)
+        {
+            // Updates the name if fields are populated
+            setName(NameChange, NameId);
+            foreach (string parentID in ParentList[0].Split(","))
+            {
+                DocumentRelationModel newDocRelInsert = new DocumentRelationModel
+                {
+                    DoocumentID = 23,
+                    ParentID = int.Parse(parentID)
+                };
+                try
+                {
+                    _context.DocumentRelation.Add(newDocRelInsert);
+                    _context.SaveChanges();
+                }catch (Exception ex)
+                {
+                    return RedirectToAction("Error","Home");
+                }
+            }
             return RedirectToAction("Index", "Home");
         }
 

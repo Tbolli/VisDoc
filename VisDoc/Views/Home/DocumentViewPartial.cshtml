@@ -23,7 +23,7 @@
             <tr>
              <th scope="row">@elements.Id</th>
              <td>@Html.ActionLink("🔥", "Download","Home", new { filename = elements.Name })</td>
-             <td><form method="get" asp-controller="Home" asp-action="ParentSelectViewPartial"> <button id="NameToBtn" type="Submit" nameInfoclick(@elements.Id)"style="cursor: pointer; text-decoration:none;" data-toggle="modal" data-target="#ModalStats">@elements.Name</button> </form></td>
+             <td><button id="NameToBtn" type="Submit" nameInfoclick(@elements.Id)"style="cursor: pointer; text-decoration:none;" data-toggle="modal" data-target="#ModalStats">@elements.Name</button></td>
              <td>@elements.Path</td>
              <td>@elements.UploadedDateTime.ToShortDateString()</td>
             </tr>
