@@ -1,0 +1,37 @@
+﻿@model IEnumerable<VisDoc.Models.DocumentModel>
+
+<div>
+    <input name="SearchParentSelect"  onkeyup="funcOnKeyUpInput()" style="margin-bottom:15px;" class="form-control" id="myInput" type="text" placeholder="Search..">
+    <button onclick="AddToStageing()" type="submit" class="btn btn-primary">Add</button>
+   <select id="selecTParentId" name="parentSelect" class="form-select" size="8" aria-label="size 3 select example" multiple>
+
+    @foreach (var Doc in Model)
+    {   
+        <option id="@Doc.Name"  value="@Doc.Name">@Doc.Name</option>
+    } 
+    </select>
+</div>
+
+<script>
+    const funcOnKeyUpInput = ()=>{
+        let inVal = document.getElementById("myInput").value; 
+        Array.apply(null, document.getElementById("selecTParentId").options).forEach(option =>{
+            if (option.value.includes(inVal) == false){option.style.display = "none";}
+            else {option.style.display = "block"; }
+        })
+    }
+
+    const AddToStageing = ()=>{
+        let  selectOptions = document.getElementById("selecTParentId").options
+        let result=[];
+        for (let i=0; i< selectOptions.length; i++){
+            opt = selectOptions[i]
+            
+            if(opt.selected){
+                result.push(opt.value)
+            }
+        }
+        console.log(result)
+    }
+
+</script>

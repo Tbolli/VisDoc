@@ -15,7 +15,7 @@ namespace VisDoc.Controllers
             _context = context;
         }
         //Get Index
-        public IActionResult Index(string Search)
+        public IActionResult Index(string Search, string SearchParentSelect)
         {
             List<DocumentModel> model;
             if (string.IsNullOrWhiteSpace(Search))
@@ -23,16 +23,23 @@ namespace VisDoc.Controllers
                 model = _context.Document.ToList();
                 return View(model);
             }
-            model = _context.Document.Where(x => x.Name.Contains(Search)).ToList();  
+            model = _context.Document.Where(x => x.Name.Contains(Search)).OrderBy(x => x.Id).ToList();  
             return View(model);
+        }
+
+        public IActionResult ParentSelectViewPartial()
+        {
+            List<DocumentModel> model;
+            model = _context.Document.ToList();
+            return NoContent();
+
         }
 
         //Upload File
         [HttpPost("FileUpload")]
         public async Task<IActionResult> Upload(List<IFormFile> files, string givenName)
         {
-
-            if (files != null)
+           if (files != null)
             {
                 foreach (var file in files)
                 {
@@ -62,10 +69,11 @@ namespace VisDoc.Controllers
             return View("Index", model);
         }
 
-        //UpdateInfo'
+        //UpdateInfo
         [HttpPost]
         public IActionResult UpdateInfo(string NameChange, string NameId)
         {
+            if (string.IsNullOrWhiteSpace(NameChange)) { return RedirectToAction("Index", "Home"); }
             DocumentModel toBeChangedName = _context.Document.Where(doc => doc.Id == Int32.Parse(NameId)).FirstOrDefault();
             if(toBeChangedName != null)
             {
